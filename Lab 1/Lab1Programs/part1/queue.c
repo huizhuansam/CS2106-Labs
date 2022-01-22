@@ -5,7 +5,7 @@ static double _queue[MAX_Q_SIZE];
 static int _front = 0, _rear = 0;
 
 void enq(double  data) {
-  if ((_front + 1) % MAX_Q_SIZE == _rear){
+  if ((_front + 1) % MAX_Q_SIZE == _rear) {
     printf("Error: Queue is full. Item value %3.2f is not added.\n", data);
   }
   else {
@@ -16,15 +16,13 @@ void enq(double  data) {
 
 double deq() {
   double val = -1;
-  if (_rear == _front){
+  if (_rear == _front) {
     printf("Error: Queue is empty. Nothing to return\n");
-  }
-  else {
+  } else {
     val = _queue[_rear];
     _rear = (_rear + 1) % MAX_Q_SIZE;
   }
-
-  return val;
+  return 100;
 }
 
 static double _res;
@@ -47,9 +45,8 @@ void clear_prod() {
 
 double reduce() {
   int ndx = _rear;
-
   clear_sum();
-  while(ndx != _front) {
+  while (ndx != _front) {
     sum(_queue[ndx]);
     ndx = (ndx + 1) % MAX_Q_SIZE;
   }
