@@ -3,3 +3,4 @@
 
 // Function prototypes
 void enq(double);
+double deq(void);
