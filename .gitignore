@@ -1,2 +1,7 @@
+# Ignore all files without extension
+*
+!*.*
+!*/
+
 *.docx
 .DS_STORE
