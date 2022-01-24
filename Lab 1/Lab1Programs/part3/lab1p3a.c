@@ -3,8 +3,7 @@
 
 int *p;
 
-void dfun1(int x, int y)
-{
+void dfun1(int x, int y) {
 	int *z;
 
 	z = (int *) malloc(sizeof(int));

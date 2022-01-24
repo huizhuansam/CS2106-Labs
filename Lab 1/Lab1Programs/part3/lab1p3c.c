@@ -1,44 +1,48 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#define NUM_PERSONS 3
 
 typedef struct {
-    char *name;
-    int age;
+  char *name;
+  int age;
 } TPerson;
 
 TPerson *makeNewNode(char *name, int age) {
-    TPerson *p = (TPerson *) malloc(sizeof(TPerson));
-    strcpy(p->name, name);
-    p->age = age;
-
-    return p;
+  TPerson *p = (TPerson *) malloc(sizeof(TPerson));
+  p -> name = (char *) malloc(strlen(name) + 1);
+  strcpy(p -> name, name);
+  p -> age = age;
+  return p;
 }
 
 void freeNode(TPerson *node) {
-    free(node);
+  free(node -> name);
+  free(node);
+  node = NULL;
 }
 
-
-#define NUM_PERSONS 3
 int main() {
-    TPerson persons[NUM_PERSONS] = {{"Tan Ah Kow", 65}, {"Sio Bak Pau", 23},
-    {"Aiken Dueet", 21}};
-    TPerson *list[NUM_PERSONS];
+  TPerson persons[NUM_PERSONS] = {
+    {"Tan Ah Kow", 65}, 
+    {"Sio Bak Pau", 23},
+    {"Aiken Dueet", 21}
+  };
 
-    int i;
+  TPerson *list[NUM_PERSONS];
 
-    printf("ADDING PERSONS\n");
+  int i;
 
-    for(i=0; i<NUM_PERSONS; i++) {
-        printf("Adding %s aged %d\n", persons[i].name, persons[i].age);
-        list[i] = makeNewNode(persons[i].name, persons[i].age);
-    }
+  printf("ADDING PERSONS\n");
 
-    printf("\nDELETING PERSONS\n");
-    for(i=0; i<NUM_PERSONS; i++) {
-        printf("Deleting %s aged %d\n", list[i]->name, list[i]->age);
-        freeNode(list[i]);
-    }
+  for(i = 0; i < NUM_PERSONS; i++) {
+    printf("Adding %s aged %d\n", persons[i].name, persons[i].age);
+    list[i] = makeNewNode(persons[i].name, persons[i].age);
+  }
+
+  printf("\nDELETING PERSONS\n");
+  for(i = 0; i < NUM_PERSONS; i++) {
+    printf("Deleting %s aged %d\n", list[i] -> name, list[i] -> age);
+    freeNode(list[i]);
+  }
 }
-
