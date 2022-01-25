@@ -1,7 +1,7 @@
 // Maximum number of elements in a queue
 #define MAX_Q_SIZE	10
 
-// Funcion pointers
+// Function pointers
 void (*clear_ptr)(void);
 void (*op_ptr)(double);
 

@@ -162,9 +162,7 @@ void print_inorder(TTreeNode *node) {
   }
   char* name = node -> name;
   char* phoneNum = node -> phoneNum;
-  if (name != NULL && phoneNum != NULL) {
-    printf("Name: %s; Phone number:%.*s\n", name, (int) sizeof(phoneNum), phoneNum);
-  }
+  printf("Name: %s; Phone number:%.*s\n", name, (int) sizeof(phoneNum), phoneNum);
   print_inorder(node -> left);
   print_inorder(node -> right);
 }
