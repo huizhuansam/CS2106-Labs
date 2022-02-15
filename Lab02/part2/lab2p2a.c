@@ -25,9 +25,7 @@ int main() {
     printf("\nWaiting for child to exit.\n");
     wait(&stat);
     printf("CHILD HAS EXITED WITH STATUS %d\n", WEXITSTATUS(stat));
-  }
-  else 
-  {
+  } else {
     id = getpid();
     int parent_id = getppid();
     printf("\nI am the child.\n");

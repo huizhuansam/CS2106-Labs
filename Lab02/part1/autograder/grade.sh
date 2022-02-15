@@ -25,11 +25,13 @@ echo -e "Test date and time: $(date +%A,\ %d\ %B\ %Y,\ %T)\n" > results.out
 NUM_FILES=0
 
 for i in ./subs/*/; do
+  let "NUM_FILES++"
   MATRIC_NUMBER=$(basename ./subs/$i)
   gcc $i*.c &> /dev/null
   
   if [[ $? -ne 0 ]]; then
     echo "Directory $MATRIC_NUMBER has a compile error." >> results.out
+    echo "Directory $MATRIC_NUMBER score 0 / $TOTAL" >> results.out
     continue
   else
     mv a.out $i
@@ -47,7 +49,6 @@ for i in ./subs/*/; do
   done
 
   echo "Directory $MATRIC_NUMBER score $SCORE / $TOTAL" >> results.out
-  let "NUM_FILES++"
 done
 
 echo -e "\nProcessed $NUM_FILES files." >> results.out

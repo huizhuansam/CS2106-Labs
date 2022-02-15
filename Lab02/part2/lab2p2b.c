@@ -6,10 +6,10 @@ int main(int ac, char **av, char **vp) {
 
   int i;
 
-  for(i=0; i<ac; i++)
+  for(i = 0; i < ac; i++)
     printf("Arg %d is %s\n", i, av[i]);
 
-  i=0;
+  i = 0;
   while(vp[i] != NULL) {
     printf("Env %d is %s\n", i, vp[i]);
     i++;
