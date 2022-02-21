@@ -53,8 +53,6 @@ done
 
 echo -e "\nProcessed $NUM_FILES files." >> results.out
 
-cat results.out
-
 # Note: See Lab02Qn.pdf for format of output file. Marks will be deducted for missing elements.
 #
 

@@ -11,20 +11,17 @@ int main() {
   // This creates a pipe. p[0] is the reading end,
   // p[1] is the writing end.
 
-  if(pipe(p) < 0) 
+  if (pipe(p) < 0) {
     perror("lab2p2e: ");
-
+  }
   // We will send a message from father to child
-  if(fork() != 0) {
+  if (fork() != 0) {
     close(p[0]); // The the end we are not using.
     write(p[1], str, strlen(str));
     close(p[1]);
     wait(NULL);
-  }
-  else
-  {
+  } else {
     char buffer[128];
-
     close(p[1]); // Close the writing end
     read(p[0], buffer, 127);
     printf("Child got the message \"%s\"\n", buffer);
