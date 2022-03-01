@@ -1,4 +1,4 @@
-# Ignore all files without extension
+# Ignore all files without extension (binary files)
 *
 !*.*
 !*/
@@ -7,3 +7,4 @@
 .DS_STORE
 Zoom Links for Lab Groups.pdf
 *.zip
+**/*.out
