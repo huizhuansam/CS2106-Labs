@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "bitmap.h"
+#define TRAVERSING 0
+#define SEARCHING 1
 
 // IMPLEMENTED FOR YOU
 // Utility function to print out an array of char as bits
@@ -11,21 +13,21 @@
 //
 // Returns: Nothing
 void print_map(unsigned char *map, int len) {
-    int i, j;
+  int i, j;
 
-    for(i=0; i<len; i++) {
-
-        unsigned char mask = 0b10000000;
-        for(j=0; j<8; j++) {
-            if(map[i] & mask)
-                printf("1");
-            else
-                printf("0");
-            mask = mask >> 1;
-        }
-        printf(" ");
+  for (i = 0; i < len; i++) {
+    unsigned char mask = 0b10000000;
+    for (j = 0; j < 8; j++) {
+      if (map[i] & mask) {
+        printf("1");
+      } else {
+        printf("0");
+      }
+      mask = mask >> 1;
     }
-    printf("\n");
+    printf(" ");
+  }
+  printf("\n");
 }
 
 // Search the bitmap for the required number of zeroes (representing
@@ -38,18 +40,70 @@ void print_map(unsigned char *map, int len) {
 // Returns: Index to stretch of 0's of required length, -1 if no such stretch can be found
 
 long search_map(unsigned char *bitmap, int len, long num_zeroes) {
-    return -1;
-} //main
+  int mode = TRAVERSING;
+  long left_pointer = 0, right_pointer = 0;
+
+  for (int bitmap_index = 0; bitmap_index < len; bitmap_index++) {
+    unsigned char bitmask = 0b10000000;
+    for (int i = 0; i < 8; i++, bitmask = bitmask >> 1, right_pointer++) {
+      if (mode == TRAVERSING) {
+        if (!(bitmask & bitmap[bitmap_index])) {
+          left_pointer = right_pointer;
+          mode = SEARCHING;
+        }
+      }
+      if (mode == SEARCHING) {
+        if (bitmask & bitmap[bitmap_index]) {
+          mode = TRAVERSING;
+        } else {
+          if (right_pointer - left_pointer + 1 == num_zeroes) {
+            return left_pointer;
+          }
+        }
+      }
+    }
+  }
+
+  return -1;
+}
 
 // Set map bits to 0 or 1 depending on whether value is non-zero
 // map = Bitmap, declared as an array of unsigned char
 // start = Starting index to mark as 1 or 0
-// length = Number of bits to mark
+// length :q
+// = Number of bits to mark
 // value = Value to mark the bits as. value = 0 marks the bits
 //          as 0, non-zero marks the bits as 1
 // Returns: Nothing
 
 void set_map(unsigned char *map, long start, long length, int value) {
+  long map_begin_index = start / 8; // Index of the map to set from
+  long map_end_index = (start + length - 1) / 8; // Index of the last char to scan
+  long final_bit_index = start + length - 1;
+  unsigned char full_mask = 0b11111111, left_mask = 0b11111111, right_mask = 0b11111111;
+  left_mask = start % 8 == 0 ? 0b00000000 : left_mask >> start % 8;
+  if (map_begin_index == map_end_index) {
+    left_mask = left_mask >> (8 - (final_bit_index % 8 + 1));
+    left_mask = left_mask << (8 - (final_bit_index % 8 + 1));
+    if (left_mask) {
+      map[map_begin_index] = value ? map[map_begin_index] | left_mask : map[map_begin_index] & ~left_mask;
+    }
+    return;
+  }
+
+  if (left_mask) {
+    map[map_begin_index] = value ? map[map_begin_index] | left_mask : map[map_begin_index] & ~left_mask;
+  }
+
+  for (long i = map_begin_index + 1; i < map_end_index; i++) {
+    map[i] = value ? map[i] | full_mask : map[i] & ~full_mask;
+  }
+
+  right_mask = final_bit_index % 8 == 0 ? 0b00000000 : right_mask << (7 - (final_bit_index % 8));
+
+  if (right_mask) {
+    map[map_end_index] = value ? map[map_end_index] | right_mask : map[map_end_index] & ~right_mask;
+  }
 }
 
 // IMPLEMENTED FOR YOU
@@ -58,9 +112,7 @@ void set_map(unsigned char *map, long start, long length, int value) {
 // start = Starting index to mark
 // length = Number of bits to mark as "1"
 void allocate_map(unsigned char *map, long start, long length) {
-
-    set_map(map, start, length, 1);
-
+  set_map(map, start, length, 1);
 }
 
 // IMPLEMENTED FOR YOU
@@ -69,6 +121,6 @@ void allocate_map(unsigned char *map, long start, long length) {
 // start = Starting index to mark
 // length = Number of bits to mark as "0"
 void free_map(unsigned char *map, long start, long length) {
-    set_map(map, start, length, 0);
+  set_map(map, start, length, 0);
 }
 
