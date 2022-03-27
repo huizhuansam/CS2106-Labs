@@ -66,7 +66,6 @@ long search_map(unsigned char *bitmap, int len, long num_zeroes) {
 
   return -1;
 }
-
 // Set map bits to 0 or 1 depending on whether value is non-zero
 // map = Bitmap, declared as an array of unsigned char
 // start = Starting index to mark as 1 or 0
@@ -77,32 +76,17 @@ long search_map(unsigned char *bitmap, int len, long num_zeroes) {
 // Returns: Nothing
 
 void set_map(unsigned char *map, long start, long length, int value) {
-  long map_begin_index = start / 8; // Index of the map to set from
-  long map_end_index = (start + length - 1) / 8; // Index of the last char to scan
-  long final_bit_index = start + length - 1;
-  unsigned char full_mask = 0b11111111, left_mask = 0b11111111, right_mask = 0b11111111;
-  left_mask = start % 8 == 0 ? 0b00000000 : left_mask >> start % 8;
-  if (map_begin_index == map_end_index) {
-    left_mask = left_mask >> (8 - (final_bit_index % 8 + 1));
-    left_mask = left_mask << (8 - (final_bit_index % 8 + 1));
-    if (left_mask) {
-      map[map_begin_index] = value ? map[map_begin_index] | left_mask : map[map_begin_index] & ~left_mask;
+  long i;
+  unsigned char mask = 0b10000000;
+
+  if (value) {
+    for (long i = 0; i < length; i++) {
+      map[(start + i) / 8] = map[(start + i ) / 8] | (mask >> ((start + i) % 8));
     }
-    return;
-  }
-
-  if (left_mask) {
-    map[map_begin_index] = value ? map[map_begin_index] | left_mask : map[map_begin_index] & ~left_mask;
-  }
-
-  for (long i = map_begin_index + 1; i < map_end_index; i++) {
-    map[i] = value ? map[i] | full_mask : map[i] & ~full_mask;
-  }
-
-  right_mask = final_bit_index % 8 == 0 ? 0b00000000 : right_mask << (7 - (final_bit_index % 8));
-
-  if (right_mask) {
-    map[map_end_index] = value ? map[map_end_index] | right_mask : map[map_end_index] & ~right_mask;
+  } else {
+    for (long i = 0; i < length; i++) {
+      map[(start + i) / 8] = map[(start + i ) / 8] & ~(mask >> ((start + i) % 8));
+    }
   }
 }
 
